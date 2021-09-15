@@ -1,0 +1,37 @@
+body {
+  background-color: #AED4E6;
+  color: #30343F;
+}
+
+textarea {
+  width: 80vw;
+  height: 70vh;
+}
+
+.loginForm {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.mainDiv {
+  display: flex;
+  flex-direction: column;
+}
+
+.sheetView {
+  position: absolute;
+  margin-left: 30em;
+  top: 0;
+}
+
+.setSheet:hover {
+  cursor: pointer;
+}
+
+.songForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+}
