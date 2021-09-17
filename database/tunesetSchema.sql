@@ -9,6 +9,7 @@ create table sheets (
   title text,
   artist text,
   url text,
+  embed text,
   user_name text
 );
 

@@ -6,10 +6,13 @@ import SheetView from './SheetView.jsx';
 const SheetList = ({ username, page, setPage }) => {
   const [sheets, setSheets] = useState([]);
   const [setlists, setSetlists] = useState([]);
-  const [setListSheets, setSetlistSheets] = useState([]);
+  const [setListSheets, setSetlistSheets] = useState(0);
   const [newSetlist, setNewSetlist] = useState('');
   const [selectedSetlist, setSelectedSetlist] = useState(0);
   const [selectedSheet, setSelectedSheet] = useState(0);
+  const [sortBy, setSortBy] = useState('title');
+  const [openedFromSetlist, setOpenedFromSetlist] = useState(false);
+
 
   const fetchAll = () => {
     fetchSetSheets();
@@ -22,7 +25,12 @@ const SheetList = ({ username, page, setPage }) => {
       axios
         .get(`/sheets/${username}`)
         .then((results) => {
-          setSheets(results.data);
+          setSheets(results.data.sort(function (a, b) {
+            var x = a.artist;
+            var y = b.artist;
+            return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+          })
+          );
           resolve();
         })
         .catch((err) => {
@@ -97,7 +105,6 @@ const SheetList = ({ username, page, setPage }) => {
 
   const handleView = (event) => {
     setListSheets.forEach((sheet) => {
-      // console.log(sheet.id, Number(event.target.attributes[0].value));
       if (sheet.id === Number(event.target.attributes[0].value)) {
         console.log(sheet.id);
         setSelectedSheet(sheet);
@@ -122,21 +129,46 @@ const SheetList = ({ username, page, setPage }) => {
     };
   };
 
+  const handleSort = (sortBy) => {
+    console.log('sort');
+    let sorted = [...sheets];
+    if (sortBy === 'title') {
+      sorted = sorted.sort(function (a, b) {
+        var x = a.title;
+        var y = b.title;
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+      });
+      setSortBy('artist');
+    } else if (sortBy === 'artist') {
+      sorted = sorted.sort(function (a, b) {
+        var x = a.artist;
+        var y = b.artist;
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+      });
+      setSortBy('title');
+    };
+    setSheets(sorted);
+  }
+
   return (
     <>
+      <h3 onClick={() => { handleSort(sortBy) }} style={{ cursor: 'pointer', width: '5em' }} >Title/Artist</h3>
       <div className="list">
         <div>{sheets.map((sheet) => {
-          return <SheetListItem key={sheet.id} sheet={sheet} setlists={setlists} setSelectedSheet={setSelectedSheet} />
+          return <SheetListItem key={sheet.id} sheet={sheet} setlists={setlists} setSelectedSheet={setSelectedSheet} setOpenedFromSetlist={setOpenedFromSetlist} />
         })}</div>
         <h2>Set Lists</h2>
         <div>{setlists.map((list) => {
           return (
             <div>
-              <h3 onClick={fetchSetSheets} value={list.id} key={list.id}>{list.name}</h3>
+              <h3 onClick={fetchSetSheets} style={{ cursor: 'pointer', width: '5em' }} value={list.id} key={list.id}>{list.name}</h3>
               {selectedSetlist === list.id
                 ? setListSheets.map((sheet) => {
                   return (
-                    <div onClick={handleView} className="setSheet">
+                    <div onClick={(event) => {
+                      handleView(event);
+                      setOpenedFromSetlist(true);
+                    }} className="setSheet">
                       <span value={sheet.id}> {sheet.title} - {sheet.artist} </span>
                     </div>
                   )
@@ -153,8 +185,12 @@ const SheetList = ({ username, page, setPage }) => {
       <div className="sheetView">
         {selectedSheet ? (
           <>
-            <button onClick={handlePrev}>Previous</button>
-            <button onClick={handleNext}>Next</button>
+            {openedFromSetlist
+              ? <div>
+                <button onClick={handlePrev}>Previous</button>
+                <button onClick={handleNext}>Next</button>
+              </div>
+              : null}
             <SheetView sheet={selectedSheet} setSelectedSheet={setSelectedSheet} fetchAll={fetchAll} />
           </>
         ) : null}

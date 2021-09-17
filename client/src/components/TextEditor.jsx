@@ -13,10 +13,11 @@ const TextEditor = ({ username, setPage }) => {
   };
   const postSheet = (event) => {
     event.preventDefault();
-    const { title, artist, url } = sheet;
+    console.log(sheet);
+    const { title, artist, url, embed } = sheet;
     return new Promise((resolve, reject) => {
       axios
-        .post('/sheets', { title, artist, url, username })
+        .post('/sheets', { title, artist, url, embed, username })
         .then(() => {
           resolve();
           setSheet({});
@@ -36,7 +37,8 @@ const TextEditor = ({ username, setPage }) => {
       <form className="songForm" onSubmit={postSheet}>
         <input required name="title" type="text" placeholder="Title" onChange={handleChange} />
         <input required name="artist" type="text" placeholder="Artist" onChange={handleChange} />
-        <input required name="url" type="url" placeholder="Sheet URL" onChange={handleChange} />
+        <input required name="url" type="url" placeholder="Edit URL" onChange={handleChange} />
+        <input required name="embed" type="url" placeholder="View URL" onChange={handleChange} />
         <input type="submit" />
       </form>
     </div>

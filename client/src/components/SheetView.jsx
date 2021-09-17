@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 const SheetView = ({ sheet, setSelectedSheet, fetchAll }) => {
   const [transpose, setTranpose] = useState(0);
   const [newBodyString, setNewBodyString] = useState('');
+  const [editView, setEditView] = useState('edit');
+  const [viewHeight, setViewHeight] = useState(sheet.height || 45);
   const handleTranspose = (amount) => {
     const transposeAmount = Number(amount);
     const notes = ['A', 'A#', 'B', 'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#'];
@@ -86,11 +88,32 @@ const SheetView = ({ sheet, setSelectedSheet, fetchAll }) => {
       });
   };
 
-  console.log(sheet);
+  const handleEditView = () => {
+    editView === 'edit' ? setEditView('view') : setEditView('edit');
+  };
+
+  const handleViewHeight = (event) => {
+    setViewHeight(event.target.value);
+    window.scrollTo({
+      top: document.documentElement.scrollHeight,
+      behavior: 'auto'
+      /* you can also use 'auto' behaviour 
+      in place of 'smooth' */
+    });
+  }
+
+  const handleHeightSubmit = () => {
+    axios.put(`/sheets/${sheet.id}/${viewHeight}`)
+  };
+
   return (
     <div>
       <h2> '{sheet.title}' by {sheet.artist}</h2>
-      <iframe src={sheet.url}></iframe>
+      <input type="button" value={editView} onClick={handleEditView} />
+      {editView === 'view'
+        ? <iframe src={sheet.url}></iframe>
+        : <iframe src={sheet.embed} style={{ height: `${viewHeight}em` }} ></iframe>
+      }
       <form onSubmit={() => {
         event.preventDefault();
         handleTranspose(transpose);
@@ -98,7 +121,15 @@ const SheetView = ({ sheet, setSelectedSheet, fetchAll }) => {
         <input onChange={handleChange} type='number' min="-11" max="11" />
         <input type="submit" value="Transpose by half steps" />
       </form>
-      <input type="button" value="Delete Sheet" onClick={handleDelete} />
+      {editView === 'edit'
+        ? <div>
+          <input type="range" min={45} max={150} value={viewHeight} onChange={handleViewHeight} />
+          <input type="button" value="Set Document Height" onClick={handleHeightSubmit} />
+        </div>
+        : null}
+      <div>
+        <input type="button" value="Delete Sheet" onClick={handleDelete} />
+      </div>
     </div>
   )
 };

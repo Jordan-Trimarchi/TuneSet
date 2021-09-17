@@ -1,13 +1,13 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
-const SheetListItem = ({ sheet, setlists, setSelectedSheet }) => {
+const SheetListItem = ({ sheet, setlists, setSelectedSheet, setOpenedFromSetlist }) => {
 
   const addToSetlist = (event) => {
 
     return new Promise((resolve, reject) => {
       axios
-        .post('/association', { sheet: sheet.id , list: event.target.value })
+        .post('/association', { sheet: sheet.id, list: event.target.value })
         .then(() => {
           resolve();
         }
@@ -25,15 +25,21 @@ const SheetListItem = ({ sheet, setlists, setSelectedSheet }) => {
 
   return (
     <div>
-      <select id="selectBox" value="Add To Set List" onChange={() => {addToSetlist(event)}}>
+      <select id="selectBox" value="Add To Set List" onChange={() => { addToSetlist(event) }}>
         <option value="">Add To Set List</option>
         {setlists.map((list) => {
           return <option key={list.id} value={list.id}> {list.name} </option>
         })}
       </select>
-      <span> {sheet.artist}</span>
+      <span onClick={() => {
+        handleView();
+        setOpenedFromSetlist(false);
+      }} style={{ cursor: 'pointer' }}> {sheet.artist}</span>
       <span> - </span>
-      <span onClick={handleView}> {sheet.title}</span>
+      <span onClick={() => {
+        handleView();
+        setOpenedFromSetlist(false);
+      }} style={{ cursor: 'pointer' }}> {sheet.title}</span>
     </div>
   )
 }

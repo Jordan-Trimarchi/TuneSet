@@ -1,5 +1,5 @@
 {
-  "name": "hr-bld18-mvp",
+  "name": "tuneset",
   "version": "1.0.0",
   "description": "tuneset",
   "main": "index.js",
@@ -7,18 +7,18 @@
     "build": "webpack --mode development --watch",
     "test": "test",
     "start": "nodemon server/index.js",
-    "lint": "./node_modules/.bin/eslint"
+    "lint": "eslint"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Jordan-Trimarchi/hr-bld18-mvp.git"
+    "url": "git+https://github.com/Jordan-Trimarchi/tuneset.git"
   },
   "author": "A. Jordan Trimarchi",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Jordan-Trimarchi/hr-bld18-mvp/issues"
+    "url": "https://github.com/Jordan-Trimarchi/tuneset/issues"
   },
-  "homepage": "https://github.com/Jordan-Trimarchi/hr-bld18-mvp#readme",
+  "homepage": "https://github.com/Jordan-Trimarchi/tuneset#readme",
   "dependencies": {
     "@googleapis/docs": "^0.2.0",
     "axios": "^0.21.1",

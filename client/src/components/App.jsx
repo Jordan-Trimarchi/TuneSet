@@ -39,7 +39,6 @@ const App = () => {
             <button onClick={() => { setPage('create') }}>
               Create A Song Sheet
             </button>
-            <h3>Title/Artist</h3>
             <SheetList username={username} page={page} setPage={setPage} />
           </div>
           : null}
