@@ -8,7 +8,7 @@ create table sheets (
   id serial primary key,
   title text,
   artist text,
-  body text,
+  url text,
   user_name text
 );
 
@@ -22,6 +22,6 @@ create table sheets_lists (
   id serial primary key,
   sheet_id int,
   list_id int,
-  foreign key(sheet_id) references sheets(id),
-  foreign key(list_id) references lists(id)
+  foreign key(sheet_id) references sheets(id) on delete cascade,
+  foreign key(list_id) references lists(id) on delete cascade
 );

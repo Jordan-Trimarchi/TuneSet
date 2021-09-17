@@ -25,10 +25,10 @@ const App = () => {
           : null}
         {page === 'create' ?
           <div className="create">
-            <TextEditor username={username} setPage={setPage} />
             <button onClick={() => { setPage('list') }}>
               Back
             </button>
+            <TextEditor username={username} setPage={setPage} />
           </div>
           : null}
         {page === 'list'

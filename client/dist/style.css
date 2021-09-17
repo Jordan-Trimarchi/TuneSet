@@ -3,9 +3,9 @@ body {
   color: #30343F;
 }
 
-textarea {
+iframe {
   width: 80vw;
-  height: 70vh;
+  height: 100vh;
 }
 
 .loginForm {

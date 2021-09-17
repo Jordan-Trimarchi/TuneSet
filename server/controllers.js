@@ -27,7 +27,7 @@ const postSheet = (req, res) => {
     .connect()
     .then((client) => {
       client
-        .query('insert into sheets (title, artist, body, user_name) VALUES ($1, $2, $3, $4)', [req.body.title, req.body.artist, req.body.body, req.body.username])
+        .query('insert into sheets (title, artist, url, user_name) VALUES ($1, $2, $3, $4)', [req.body.title, req.body.artist, req.body.url, req.body.username])
         .then((results) => {
           res.send();
           client.release();
@@ -118,11 +118,36 @@ const getSetSheets = (req, res) => {
     })
 };
 
+const deleteSheet = (req, res) => {
+  const sheetId = req.params.sheet_id;
+  console.log(req.params);
+
+  pool
+    .connect()
+    .then((client) => {
+      client
+        .query('delete from sheets where id = $1', [sheetId])
+        .then((results) => {
+          client.release();
+          res.send(results.rows);
+        })
+        .catch((err) => {
+          client.release();
+          console.log(err.stack);
+        })
+    })
+    .catch((err) => {
+      client.release();
+      console.log(err.stack);
+    })
+};
+
 module.exports = {
   getSheets,
   postSheet,
   getSetlists,
   postSetlist,
   postAssociation,
-  getSetSheets
+  getSetSheets,
+  deleteSheet,
 };

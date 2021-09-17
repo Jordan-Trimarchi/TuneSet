@@ -1,6 +1,7 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 
-const SheetView = ({ sheet }) => {
+const SheetView = ({ sheet, setSelectedSheet, fetchAll }) => {
   const [transpose, setTranpose] = useState(0);
   const [newBodyString, setNewBodyString] = useState('');
   const handleTranspose = (amount) => {
@@ -71,10 +72,25 @@ const SheetView = ({ sheet }) => {
     setTranpose(event.target.value);
   };
 
+  const handleDelete = (event) => {
+    event.preventDefault();
+    axios.delete(`/sheets/${sheet.id}`)
+      .then(() => {
+        console.log('done');
+        setSelectedSheet(0);
+        fetchAll();
+      })
+      .catch((err) => {
+        console.error(err);
+        reject(err);
+      });
+  };
+
+  console.log(sheet);
   return (
     <div>
       <h2> '{sheet.title}' by {sheet.artist}</h2>
-      {newBodyString ? <div> {newBodyString} </div> : <div> {sheet.body} </div>}
+      <iframe src={sheet.url}></iframe>
       <form onSubmit={() => {
         event.preventDefault();
         handleTranspose(transpose);
@@ -82,6 +98,7 @@ const SheetView = ({ sheet }) => {
         <input onChange={handleChange} type='number' min="-11" max="11" />
         <input type="submit" value="Transpose by half steps" />
       </form>
+      <input type="button" value="Delete Sheet" onClick={handleDelete} />
     </div>
   )
 };

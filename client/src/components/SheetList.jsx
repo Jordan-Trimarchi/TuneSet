@@ -3,13 +3,19 @@ import axios from 'axios';
 import SheetListItem from './SheetListItem.jsx';
 import SheetView from './SheetView.jsx';
 
-const SheetList = ({ username, page }) => {
+const SheetList = ({ username, page, setPage }) => {
   const [sheets, setSheets] = useState([]);
   const [setlists, setSetlists] = useState([]);
   const [setListSheets, setSetlistSheets] = useState([]);
   const [newSetlist, setNewSetlist] = useState('');
   const [selectedSetlist, setSelectedSetlist] = useState(0);
   const [selectedSheet, setSelectedSheet] = useState(0);
+
+  const fetchAll = () => {
+    fetchSetSheets();
+    fetchSetlists();
+    fetchSheets();
+  };
 
   const fetchSheets = () => {
     return new Promise((resolve, reject) => {
@@ -26,7 +32,7 @@ const SheetList = ({ username, page }) => {
     });
   };
 
-  const fetchSetlists = (event) => {
+  const fetchSetlists = () => {
     return new Promise((resolve, reject) => {
       axios
         .get(`/setlists/${username}`)
@@ -120,7 +126,7 @@ const SheetList = ({ username, page }) => {
     <>
       <div className="list">
         <div>{sheets.map((sheet) => {
-          return <SheetListItem key={sheet.id} sheet={sheet} setlists={setlists} />
+          return <SheetListItem key={sheet.id} sheet={sheet} setlists={setlists} setSelectedSheet={setSelectedSheet} />
         })}</div>
         <h2>Set Lists</h2>
         <div>{setlists.map((list) => {
@@ -149,7 +155,7 @@ const SheetList = ({ username, page }) => {
           <>
             <button onClick={handlePrev}>Previous</button>
             <button onClick={handleNext}>Next</button>
-            <SheetView sheet={selectedSheet} />
+            <SheetView sheet={selectedSheet} setSelectedSheet={setSelectedSheet} fetchAll={fetchAll} />
           </>
         ) : null}
       </div>

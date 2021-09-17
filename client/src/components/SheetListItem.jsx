@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import axios from 'axios';
 
-const SheetListItem = ({ sheet, setlists }) => {
+const SheetListItem = ({ sheet, setlists, setSelectedSheet }) => {
 
   const addToSetlist = (event) => {
 
@@ -19,6 +19,10 @@ const SheetListItem = ({ sheet, setlists }) => {
     });
   };
 
+  const handleView = () => {
+    setSelectedSheet(sheet);
+  };
+
   return (
     <div>
       <select id="selectBox" value="Add To Set List" onChange={() => {addToSetlist(event)}}>
@@ -27,9 +31,9 @@ const SheetListItem = ({ sheet, setlists }) => {
           return <option key={list.id} value={list.id}> {list.name} </option>
         })}
       </select>
-      <span> {sheet.title}</span>
-      <span> - </span>
       <span> {sheet.artist}</span>
+      <span> - </span>
+      <span onClick={handleView}> {sheet.title}</span>
     </div>
   )
 }

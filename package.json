@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Jordan-Trimarchi/hr-bld18-mvp#readme",
   "dependencies": {
+    "@googleapis/docs": "^0.2.0",
     "axios": "^0.21.1",
     "babel-polyfill": "^6.26.0",
     "cors": "^2.8.5",
