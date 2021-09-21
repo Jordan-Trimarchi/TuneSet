@@ -35,10 +35,10 @@ const TextEditor = ({ username, setPage }) => {
   return (
     <div>
       <form className="songForm" onSubmit={postSheet}>
-        <input required name="title" type="text" placeholder="Title" onChange={handleChange} />
+        <input autoComplete="on" required name="title" type="text" placeholder="Title" onChange={handleChange} />
         <input required name="artist" type="text" placeholder="Artist" onChange={handleChange} />
         <input required name="url" type="url" placeholder="Edit URL" onChange={handleChange} />
-        <input required name="embed" type="url" placeholder="View URL" onChange={handleChange} />
+        <input required name="embed" type="text" placeholder="Embed HTML" onChange={handleChange} />
         <input type="submit" />
       </form>
     </div>

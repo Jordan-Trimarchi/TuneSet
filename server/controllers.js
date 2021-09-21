@@ -165,6 +165,29 @@ const updateHeight = (req, res) => {
     })
 };
 
+const updateScroll = (req, res) => {
+  const sheetId = req.params.sheet_id;
+  const scroll = req.params.scroll;
+  pool
+    .connect()
+    .then((client) => {
+      client
+        .query('update sheets set scroll = $1 where id = $2', [scroll, sheetId])
+        .then((results) => {
+          client.release();
+          res.send();
+        })
+        .catch((err) => {
+          client.release();
+          console.log(err.stack);
+        })
+    })
+    .catch((err) => {
+      client.release();
+      console.log(err.stack);
+    })
+};
+
 module.exports = {
   getSheets,
   postSheet,
@@ -174,4 +197,5 @@ module.exports = {
   getSetSheets,
   deleteSheet,
   updateHeight,
+  updateScroll,
 };

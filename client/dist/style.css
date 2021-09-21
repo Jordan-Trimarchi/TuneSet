@@ -4,7 +4,7 @@ body {
 }
 
 iframe {
-  width: 80vw;
+  width: 70vw;
   height: 45em;
 }
 
@@ -34,4 +34,8 @@ iframe {
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
+}
+
+input[type=number]::-webkit-outer-spin-button {
+  opacity: 1;
 }

@@ -8,6 +8,8 @@ create table sheets (
   id serial primary key,
   title text,
   artist text,
+  scroll text,
+  height int,
   url text,
   embed text,
   user_name text

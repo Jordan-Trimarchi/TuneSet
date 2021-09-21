@@ -12,12 +12,13 @@ const SheetList = ({ username, page, setPage }) => {
   const [selectedSheet, setSelectedSheet] = useState(0);
   const [sortBy, setSortBy] = useState('title');
   const [openedFromSetlist, setOpenedFromSetlist] = useState(false);
+  
 
 
   const fetchAll = () => {
-    fetchSetSheets();
     fetchSetlists();
     fetchSheets();
+    selectedSetlist ? fetchSetSheets() : null;
   };
 
   const fetchSheets = () => {
@@ -77,7 +78,6 @@ const SheetList = ({ username, page, setPage }) => {
   };
 
   const postSetlist = () => {
-    event.preventDefault();
     return new Promise((resolve, reject) => {
       axios
         .post('/setlists', { name: newSetlist, username })
