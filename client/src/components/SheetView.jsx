@@ -1,5 +1,9 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import ButtonGroup from '@material-ui/core/Button';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+
 
 const SheetView = ({ sheet, setSelectedSheet, fetchAll }) => {
   const [transpose, setTranpose] = useState(0);
@@ -109,36 +113,47 @@ const SheetView = ({ sheet, setSelectedSheet, fetchAll }) => {
   };
 
   return (
-    <div>
+    <div style={{ width: '63vw' }}>
       <h2> '{sheet.title}' by {sheet.artist}</h2>
-      <input type="button" value={editView === 'edit' ? 'Click for Edit Mode' : 'Click for View Mode'} onClick={handleEditView} />
-      <div>
-        <input type="number" value={Number(scrollMins)} min="0" step="0.25" onChange={(event) => { setScrollMins(event.target.value) }} style={{ width: '3.75em' }} />
-        <input type="button" value={`Scroll to bottom over ${Number(scrollMins)} minutes.`} onClick={() => { handleScroll() }} />
-        <input type="button" value="Stop Auto Scroll" onClick={() => { scrolling = false; }} />
+      <Button variant="contained" onClick={handleEditView}>
+        {editView === 'edit' ? 'Enter Edit Mode' : 'Enter View Mode'}
+      </Button>
+      {/* <input type="button" value={editView === 'edit' ? 'Click for Edit Mode' : 'Click for View Mode'} onClick={handleEditView} /> */}
+      <div style={{ display: 'flex', justifyContent: "space-between" }}>
+        <TextField type="number" placeholder="Mins" value={Number(scrollMins)} inputProps={{ min: "0", max: "10", step: ".25" }} onChange={(event) => { setScrollMins(event.target.value) }} style={{ width: '3.75em' }} />
+        <ButtonGroup variant="contained" size="small" >
+          <Button style={{ borderRight: 'solid' }} onClick={() => { handleScroll() }}>
+            {`Scroll to bottom over ${Number(scrollMins)} minutes.`}
+          </Button>
+          <Button onClick={() => { scrolling = false; }}>
+            <div>	&#11035;</div>
+          </Button>
+        </ButtonGroup>
       </div>
       <div>
-        <form onSubmit={(event) => {
+        <form style={{ display: 'flex', justifyContent: "space-between" }} onSubmit={(event) => {
           event.preventDefault();
           handleTranspose(transpose);
         }}>
-          <input type="textarea" value={newChordString || chordString} onChange={(event) => { setChordString(event.target.value) }} placeholder="Enter chords separated by commas" />
-          <input onChange={handleChange} type='number' min="-11" max="11" />
-          <input type="submit" value={`Transpose${transpose < 0 ? ' down' : transpose > 0 ? ' up' : ''} by ${Math.abs(transpose)} half steps`} />
+          <TextField type="textarea" value={newChordString || chordString} onChange={(event) => { setChordString(event.target.value) }} placeholder="Enter chords separated by commas" style={{ width: '20em' }} />
+          <TextField onChange={handleChange} style={{ width: '2.25em' }} type='number' inputProps={{ min: "-11", max: "11" }} />
+          <Button variant="contained" type="submit">
+            {`Transpose${transpose < 0 ? ' down' : transpose > 0 ? ' up' : ''} by ${Math.abs(transpose)} half steps`}
+          </Button>
         </form>
       </div>
       {editView === 'view'
-        ? <iframe src={sheet.url}></iframe>
-        : <iframe src={sheet.embed} style={{ height: `${viewHeight}em` }} ></iframe>
+        ? <iframe src={sheet.url} style={{ width: '63vw' }}></iframe>
+        : <iframe src={sheet.embed} style={{ height: `${viewHeight}em`, width: '63vw' }} ></iframe>
       }
       {editView === 'edit'
-        ? <div>
+        ? <div style={{ display: 'flex', justifyContent: "space-between" }}>
           <input type="range" min={45} max={150} value={viewHeight} onChange={handleViewHeight} />
-          <input type="button" value="Set Document Height" onClick={handleHeightSubmit} />
+          <Button variant="contained" onClick={handleHeightSubmit}> Set Document Height </Button>
         </div>
         : null}
-      <div>
-        <input type="button" value="Delete Sheet" onClick={handleDelete} />
+      <div style={{ display: 'flex', justifyContent: "center" }}>
+        <Button variant="contained" onClick={handleDelete}>Delete Sheet</Button>
       </div>
     </div>
   )

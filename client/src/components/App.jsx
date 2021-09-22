@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import TextEditor from './TextEditor.jsx';
 import SheetList from './SheetList.jsx';
+import { Button, TextField } from '@material-ui/core';
 
 const App = () => {
   const [page, setPage] = useState('');
@@ -13,21 +14,21 @@ const App = () => {
         {page === '' ?
           <div className="login">
             <form className="loginForm" onSubmit={(event) => {
-              event.preventDefault()
-              setPage('list')
+              event.preventDefault();
+              setPage('list');
             }}>
-              <input type="text" placeholder="Username" onChange={() => {
+              <TextField type="text" placeholder="Username" onChange={(event) => {
                 setUsername(event.target.value);
               }} />
-              <input type="submit" />
+              <Button variant="contained" type="submit">Submit</Button>
             </form>
           </div>
           : null}
         {page === 'create' ?
           <div className="create">
-            <button onClick={() => { setPage('list') }}>
+            <Button variant="contained" onClick={() => { setPage('list') }}>
               Back
-            </button>
+            </Button>
             <TextEditor username={username} setPage={setPage} />
           </div>
           : null}
@@ -36,9 +37,9 @@ const App = () => {
           <div className="container">
             {/* <input type="text" placeholder="Change User" /> */}
             <h2> Songs </h2>
-            <button onClick={() => { setPage('create') }}>
+            <Button variant="contained" onClick={() => { setPage('create') }}>
               Create A Song Sheet
-            </button>
+            </Button>
             <SheetList username={username} page={page} setPage={setPage} />
           </div>
           : null}

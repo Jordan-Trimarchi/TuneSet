@@ -3,9 +3,17 @@ body {
   color: #30343F;
 }
 
+button {
+  padding: 0;
+}
+
 iframe {
   width: 70vw;
   height: 45em;
+}
+
+Button {
+  height: 2em;
 }
 
 .loginForm {
@@ -21,7 +29,7 @@ iframe {
 
 .sheetView {
   position: absolute;
-  margin-left: 30em;
+  margin-left: 35vw;
   top: 0;
 }
 
@@ -36,6 +44,9 @@ iframe {
   justify-content: space-around;
 }
 
-input[type=number]::-webkit-outer-spin-button {
-  opacity: 1;
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button {  
+
+   opacity: 1;
+
 }

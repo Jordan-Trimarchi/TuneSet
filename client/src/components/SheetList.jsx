@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import SheetListItem from './SheetListItem.jsx';
 import SheetView from './SheetView.jsx';
+import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@material-ui/core';
 
 const SheetList = ({ username, page, setPage }) => {
   const [sheets, setSheets] = useState([]);
@@ -10,9 +11,8 @@ const SheetList = ({ username, page, setPage }) => {
   const [newSetlist, setNewSetlist] = useState('');
   const [selectedSetlist, setSelectedSetlist] = useState(0);
   const [selectedSheet, setSelectedSheet] = useState(0);
-  const [sortBy, setSortBy] = useState('title');
   const [openedFromSetlist, setOpenedFromSetlist] = useState(false);
-  
+
 
 
   const fetchAll = () => {
@@ -27,8 +27,8 @@ const SheetList = ({ username, page, setPage }) => {
         .get(`/sheets/${username}`)
         .then((results) => {
           setSheets(results.data.sort(function (a, b) {
-            var x = a.artist;
-            var y = b.artist;
+            var x = a.artist.toLowerCase();
+            var y = b.artist.toLowerCase();
             return ((x < y) ? -1 : ((x > y) ? 1 : 0));
           })
           );
@@ -77,7 +77,8 @@ const SheetList = ({ username, page, setPage }) => {
     });
   };
 
-  const postSetlist = () => {
+  const postSetlist = (event) => {
+    event.preventDefault();
     return new Promise((resolve, reject) => {
       axios
         .post('/setlists', { name: newSetlist, username })
@@ -105,6 +106,7 @@ const SheetList = ({ username, page, setPage }) => {
 
   const handleView = (event) => {
     setListSheets.forEach((sheet) => {
+      console.log(event.target.attributes[0])
       if (sheet.id === Number(event.target.attributes[0].value)) {
         console.log(sheet.id);
         setSelectedSheet(sheet);
@@ -129,57 +131,74 @@ const SheetList = ({ username, page, setPage }) => {
     };
   };
 
-  const handleSort = (sortBy) => {
+  const handleSort = (sort) => {
     console.log('sort');
     let sorted = [...sheets];
-    if (sortBy === 'title') {
-      sorted = sorted.sort(function (a, b) {
-        var x = a.title;
-        var y = b.title;
-        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-      });
-      setSortBy('artist');
-    } else if (sortBy === 'artist') {
-      sorted = sorted.sort(function (a, b) {
-        var x = a.artist;
-        var y = b.artist;
-        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
-      });
-      setSortBy('title');
-    };
+    sorted.sort(function (a, b) {
+      var x = a[sort].toLowerCase();
+      var y = b[sort].toLowerCase();
+      return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
     setSheets(sorted);
   }
 
   return (
     <>
-      <h3 onClick={() => { handleSort(sortBy) }} style={{ cursor: 'pointer', width: '5em' }} >Title/Artist</h3>
       <div className="list">
-        <div>{sheets.map((sheet) => {
-          return <SheetListItem key={sheet.id} sheet={sheet} setlists={setlists} setSelectedSheet={setSelectedSheet} setOpenedFromSetlist={setOpenedFromSetlist} />
-        })}</div>
-        <h2>Set Lists</h2>
-        <div>{setlists.map((list) => {
-          return (
-            <div>
-              <h3 onClick={fetchSetSheets} style={{ cursor: 'pointer', width: '5em' }} value={list.id} key={list.id}>{list.name}</h3>
-              {selectedSetlist === list.id
-                ? setListSheets.map((sheet) => {
-                  return (
-                    <div onClick={(event) => {
-                      handleView(event);
-                      setOpenedFromSetlist(true);
-                    }} className="setSheet">
-                      <span value={sheet.id}> {sheet.title} - {sheet.artist} </span>
-                    </div>
-                  )
-                })
-                : null}
-            </div>
-          )
-        })}</div>
+        <div>
+          <TableContainer component={Paper} style={{ width: selectedSheet ? '33vw' : '50vw' }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Add To Setlist</TableCell>
+                  <TableCell style={{ cursor: 'pointer' }} onClick={() => { handleSort('artist') }}>Artist</TableCell>
+                  <TableCell style={{ cursor: 'pointer' }} onClick={() => { handleSort('title') }}>Title</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {sheets.map((sheet) => (
+                  <TableRow sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
+                    <SheetListItem key={sheet.id} sheet={sheet} setlists={setlists} setSelectedSheet={setSelectedSheet} setSelectedSetlist={setSelectedSetlist} setOpenedFromSetlist={setOpenedFromSetlist} />
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+        <TableContainer component={Paper} style={{ width: selectedSheet ? '33vw' : '50vw' }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Setlist</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {setlists.map((list) => {
+                return (
+                  <TableRow>
+                    <h4 onClick={fetchSetSheets} style={{ cursor: 'pointer', width: '5em' }} value={list.id} key={list.id}>{list.name}</h4>
+                    {selectedSetlist === list.id
+                      ? setListSheets.map((sheet) => (
+                        <TableRow onClick={(event) => {
+                          handleView(event);
+                          setOpenedFromSetlist(true);
+                        }} className="setSheet">
+                          <TableCell>
+                            <div value={sheet.id}>{sheet.title} - {sheet.artist}</div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                      : null}
+                  </TableRow>
+                )
+              })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+
         <form onSubmit={postSetlist}>
-          <input required value={newSetlist} onChange={(event) => { setNewSetlist(event.target.value) }} type="text" placeholder="New Set List" />
-          <input type="submit" value="Create Set List" />
+          <TextField required value={newSetlist} onChange={(event) => { setNewSetlist(event.target.value); }} type="text" placeholder="New Set List" />
+          <Button variant="contained" type="submit">Create Set List </Button>
         </form>
       </div>
       <div className="sheetView">

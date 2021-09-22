@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { Editor, EditorState } from 'draft-js';
-import "draft-js/dist/Draft.css"
 import axios from "axios";
+import { Button, TextField } from '@material-ui/core';
 
 const TextEditor = ({ username, setPage }) => {
   const [sheet, setSheet] = useState({});
@@ -35,11 +34,11 @@ const TextEditor = ({ username, setPage }) => {
   return (
     <div>
       <form className="songForm" onSubmit={postSheet}>
-        <input autoComplete="on" required name="title" type="text" placeholder="Title" onChange={handleChange} />
-        <input required name="artist" type="text" placeholder="Artist" onChange={handleChange} />
-        <input required name="url" type="url" placeholder="Edit URL" onChange={handleChange} />
-        <input required name="embed" type="text" placeholder="Embed HTML" onChange={handleChange} />
-        <input type="submit" />
+        <TextField style={{ width: '30em' }} autoComplete="on" required name="title" type="text" placeholder="Title" onChange={handleChange} />
+        <TextField style={{ width: '30em' }} required name="artist" type="text" placeholder="Artist" onChange={handleChange} />
+        <TextField style={{ width: '30em' }} required name="url" type="url" placeholder="Edit URL" onChange={handleChange} />
+        <TextField style={{ width: '30em' }} required name="embed" type="text" placeholder="Embed HTML" onChange={handleChange} />
+        <Button variant="contained" type="submit">Submit</Button>
       </form>
     </div>
   )
