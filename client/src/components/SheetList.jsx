@@ -205,12 +205,18 @@ const SheetList = ({ username, page, setPage }) => {
         {selectedSheet ? (
           <>
             {openedFromSetlist
-              ? <div>
-                <button onClick={handlePrev}>Previous</button>
-                <button onClick={handleNext}>Next</button>
+              ? <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Button variant="contained" onClick={handlePrev}>Previous</Button>
+                <Button variant="contained" onClick={handleNext}>Next</Button>
               </div>
               : null}
             <SheetView sheet={selectedSheet} setSelectedSheet={setSelectedSheet} fetchAll={fetchAll} />
+            {openedFromSetlist
+              ? <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Button variant="contained" onClick={handlePrev}>Previous</Button>
+                <Button variant="contained" onClick={handleNext}>Next</Button>
+              </div>
+              : null}
           </>
         ) : null}
       </div>
