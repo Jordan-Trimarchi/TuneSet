@@ -43,7 +43,7 @@ const SheetView = ({ sheet, setSelectedSheet, fetchAll }) => {
       }
     }
 
-    setNewChordString(chordSnippets.join(' '))
+    setChordString(chordSnippets.join(' '))
   };
 
   const handleChange = (event) => {
@@ -135,10 +135,10 @@ const SheetView = ({ sheet, setSelectedSheet, fetchAll }) => {
           event.preventDefault();
           handleTranspose(transpose);
         }}>
-          <TextField type="textarea" value={newChordString || chordString} onChange={(event) => { setChordString(event.target.value) }} placeholder="Enter chords separated by commas" style={{ width: '20em' }} />
+          <TextField type="textarea" value={chordString} onChange={(event) => { setChordString(event.target.value) }} placeholder="Enter chords separated by commas" style={{ width: '20em' }} />
           <TextField onChange={handleChange} style={{ width: '2.25em' }} type='number' inputProps={{ min: "-11", max: "11" }} />
-          <Button variant="contained" type="submit">
-            {`Transpose${transpose < 0 ? ' down' : transpose > 0 ? ' up' : ''} by ${Math.abs(transpose)} half steps`}
+          <Button style={{ width: '21em' }} variant="contained" type="submit">
+            {`Transpose${transpose < 0 ? ' down' : transpose > 0 ? ' up' : ''} by ${Math.abs(transpose)} half step${Math.abs(transpose) !== 1 ? 's' : ''}`}
           </Button>
         </form>
       </div>

@@ -24,6 +24,7 @@ const SheetListItem = ({ sheet, setlists, setSelectedSheet, setOpenedFromSetlist
 
   const handleView = () => {
     setSelectedSheet(sheet);
+    //make it scroll to top when sheet is selected
   };
 
   return (
